@@ -6,7 +6,7 @@ LARGEUR = 750
 HAUTEUR = 750
 
 arm = [0]
-lenght_arm = [0] + [3 for i in range(150)]
+lenght_arm = [0] + [5 for i in range(100)]
 angles_arm = [0]*len(lenght_arm)
 new_pos_arm = [0]*len(lenght_arm)
 step = 0.01
@@ -22,20 +22,9 @@ def clik(event):
     Y = event.y
     #print("mouse pointer -> ", X, Y)
 
-def d_prime(x, a, b):
-    return (a*math.sin(x) - b*math.cos(x)) #/ math.sqrt((a-math.cos(x))**2 + (b-math.sin(x))**2)
-
-def zero_approximately(a, b):
-    sample = 10
-    step_search = 1.28
-    x = 0
-
-    for s in range(sample):
-        while d_prime(x, a, b) * d_prime(x + step_search, a, b) > 0 :
-            x = x + step_search
-        step_search = step_search / 10
-
-    return x
+# (a*math.sin(x) - b*math.cos(x)) #/ math.sqrt((a-math.cos(x))**2 + (b-math.sin(x))**2)
+def zero_d_prime(a, b):
+    return math.atan(b/a)
 
 def deplacement():
     global arm, X, Y, LARGEUR, HAUTEUR
@@ -67,10 +56,10 @@ def deplacement():
         a = X - (xoffset_before + xoffset_after)
         b = Y - (yoffset_before + yoffset_after)
 
-        x = zero_approximately(a, b)
+        x = zero_d_prime(a, b)
 
         # to avoid bugs
-        if b < 0:
+        if a < 0:
             x += math.pi
 
         #print(a, b, x)
