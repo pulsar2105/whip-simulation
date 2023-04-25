@@ -6,8 +6,9 @@ LARGEUR = 750
 HAUTEUR = 750
 
 arm = [0]
-lenght_arm = [0] + [3 for i in range(250)]
+lenght_arm = [0] + [3 for i in range(150)]
 angles_arm = [0]*len(lenght_arm)
+new_pos_arm = [0]*len(lenght_arm)
 step = 0.01
 
 X = 0
@@ -25,7 +26,7 @@ def d_prime(x, a, b):
     return (a*math.sin(x) - b*math.cos(x)) #/ math.sqrt((a-math.cos(x))**2 + (b-math.sin(x))**2)
 
 def zero_approximately(a, b):
-    sample = 5
+    sample = 10
     step_search = 1.28
     x = 0
 
@@ -41,11 +42,11 @@ def deplacement():
 
     #for i in range(1, len(arm)): # arm normal
 
-    for i in range(len(arm)-1, 0, -1): # corde
-
     #t = list(range(1, len(arm))) # mouvement brownien
     #random.shuffle(t)
     #for i in t: # corde
+
+    for i in range(len(arm)-1, 0, -1): # corde
 
         # the offset of the front arms is calculated
         # the offset of the base
@@ -78,7 +79,7 @@ def deplacement():
         Canevas.coords(arm[i], xoffset_before, yoffset_before, xoffset_before + math.cos(angles_arm[i]) * lenght_arm[i], yoffset_before + math.sin(angles_arm[i]) * lenght_arm[i])
 
     # update every 16 ms (60FPS)
-    root.after(16, deplacement)
+    root.after(1, deplacement)
 
 
 # creating the main window
@@ -102,6 +103,7 @@ BoutonQuitter.pack(side = LEFT, padx = 5, pady = 5)
 
 Canevas.bind("<Button-1>", clik) # event left clikk (press)
 Canevas.bind("<B1-Motion>", clik) # event left button down (hold down)
+
 deplacement()
 
 root.mainloop()
