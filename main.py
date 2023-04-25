@@ -2,8 +2,8 @@ from tkinter import *
 import random
 import math
 
-LARGEUR = 750
-HAUTEUR = 750
+WIDTH = 750
+HEIGHT = 750
 
 arm = [0]
 lenght_arm = [0] + [5 for i in range(100)]
@@ -27,7 +27,7 @@ def zero_d_prime(a, b):
     return math.atan(b/a)
 
 def deplacement():
-    global arm, X, Y, LARGEUR, HAUTEUR
+    global arm, X, Y, WIDTH, HEIGHT
 
     #for i in range(1, len(arm)): # arm normal
 
@@ -39,8 +39,8 @@ def deplacement():
 
         # the offset of the front arms is calculated
         # the offset of the base
-        xoffset_before = LARGEUR/2
-        yoffset_before = HAUTEUR/2
+        xoffset_before = WIDTH/2
+        yoffset_before = HEIGHT/2
         for j in range(i):
             xoffset_before += math.cos(angles_arm[j]) * lenght_arm[j]
             yoffset_before += math.sin(angles_arm[j]) * lenght_arm[j]
@@ -76,15 +76,15 @@ root = Tk()
 root.title("Simulation arm robot")
 
 # creation of a Canvas widget
-Canevas = Canvas(root, height = HAUTEUR, width = LARGEUR, bg='white')
+Canevas = Canvas(root, height = HEIGHT, width = WIDTH, bg='white')
 Canevas.pack(padx=5,pady=5)
 
 # creation of the base (aesthetics)
-Canevas.create_oval(LARGEUR/2-5, HAUTEUR/2-5, LARGEUR/2+5, HAUTEUR/2+5, fill="green")
+Canevas.create_oval(WIDTH/2-5, HEIGHT/2-5, WIDTH/2+5, HEIGHT/2+5, fill="green")
 
 # creation of the arms
 for i in range(1, len(lenght_arm)):
-    arm.append(Canevas.create_line(LARGEUR/2, HAUTEUR/2, LARGEUR/2, HAUTEUR/2+lenght_arm[i-1]+lenght_arm[i], fill="black"))
+    arm.append(Canevas.create_line(WIDTH/2, HEIGHT/2, WIDTH/2, HEIGHT/2+lenght_arm[i-1]+lenght_arm[i], fill="black"))
 
 # creation of a Button widget (Quit button)
 BoutonQuitter = Button(root, text = "Quitter", command = root.destroy)
