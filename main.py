@@ -5,22 +5,21 @@ import math
 LARGEUR = 750
 HAUTEUR = 750
 
-bras = [0]
-lenght_bras = [0] + [3 for i in range(250)]
-angles_bras = [0]*len(lenght_bras)
+arm = [0]
+lenght_arm = [0] + [3 for i in range(250)]
+angles_arm = [0]*len(lenght_arm)
 step = 0.01
 
 X = 0
 Y = 0
 
-def Clic(event):
-    """ Gestion de l"événement Clic gauche """
+def clik(event):
     global X, Y
 
-    # position du pointeur de la souris
+    # position of the mouse pointer
     X = event.x
     Y = event.y
-    #print("position du clic -> ", X, Y)
+    #print("mouse pointer -> ", X, Y)
 
 def d_prime(x, a, b):
     return (a*math.sin(x) - b*math.cos(x)) #/ math.sqrt((a-math.cos(x))**2 + (b-math.sin(x))**2)
@@ -38,29 +37,30 @@ def zero_approximately(a, b):
     return x
 
 def deplacement():
-    """ Déplacement des bras robotiques """
-    global bras, X, Y, LARGEUR, HAUTEUR
+    global arm, X, Y, LARGEUR, HAUTEUR
 
-    #for i in range(1, len(bras)): # bras normal
-    for i in range(len(bras)-1, 0, -1): # corde
-    #t = list(range(1, len(bras))) # mouvement brownien
+    #for i in range(1, len(arm)): # arm normal
+
+    for i in range(len(arm)-1, 0, -1): # corde
+
+    #t = list(range(1, len(arm))) # mouvement brownien
     #random.shuffle(t)
     #for i in t: # corde
 
-        # on calcule le décalage des bras avant
-        # l'offset de la base
+        # the offset of the front arms is calculated
+        # the offset of the base
         xoffset_before = LARGEUR/2
         yoffset_before = HAUTEUR/2
         for j in range(i):
-            xoffset_before += math.cos(angles_bras[j]) * lenght_bras[j]
-            yoffset_before += math.sin(angles_bras[j]) * lenght_bras[j]
+            xoffset_before += math.cos(angles_arm[j]) * lenght_arm[j]
+            yoffset_before += math.sin(angles_arm[j]) * lenght_arm[j]
 
-        # on calcule le décalage des bras après
+        # the offset of the arms is calculated after
         xoffset_after = 0
         yoffset_after = 0
-        for j in range(i+1, len(bras)):
-            xoffset_after += math.cos(angles_bras[j]) * lenght_bras[j]
-            yoffset_after += math.sin(angles_bras[j]) * lenght_bras[j]
+        for j in range(i+1, len(arm)):
+            xoffset_after += math.cos(angles_arm[j]) * lenght_arm[j]
+            yoffset_after += math.sin(angles_arm[j]) * lenght_arm[j]
 
         # on calcule a et b
         a = X - (xoffset_before + xoffset_after)
@@ -68,40 +68,40 @@ def deplacement():
 
         x = zero_approximately(a, b)
 
-        # pour éviter les bugs
+        # to avoid bugs
         if b < 0:
             x += math.pi
 
         #print(a, b, x)
-        angles_bras[i] = x
+        angles_arm[i] = x
 
-        Canevas.coords(bras[i], xoffset_before, yoffset_before, xoffset_before + math.cos(angles_bras[i]) * lenght_bras[i], yoffset_before + math.sin(angles_bras[i]) * lenght_bras[i])
+        Canevas.coords(arm[i], xoffset_before, yoffset_before, xoffset_before + math.cos(angles_arm[i]) * lenght_arm[i], yoffset_before + math.sin(angles_arm[i]) * lenght_arm[i])
 
-    # mise à jour toutes les 16 ms (60FPS)
-    Mafenetre.after(16, deplacement)
+    # update every 16 ms (60FPS)
+    root.after(16, deplacement)
 
 
-# Création de la fenêtre principale
-Mafenetre = Tk()
-Mafenetre.title("Simulation bras robot")
+# creating the main window
+root = Tk()
+root.title("Simulation arm robot")
 
-# Création d'un widget Canvas
-Canevas = Canvas(Mafenetre, height = HAUTEUR, width = LARGEUR, bg='white')
+# creation of a Canvas widget
+Canevas = Canvas(root, height = HAUTEUR, width = LARGEUR, bg='white')
 Canevas.pack(padx=5,pady=5)
 
-# création de la base (esthétique)
+# creation of the base (aesthetics)
 Canevas.create_oval(LARGEUR/2-5, HAUTEUR/2-5, LARGEUR/2+5, HAUTEUR/2+5, fill="green")
 
-# création des bras
-for i in range(1, len(lenght_bras)):
-    bras.append(Canevas.create_line(LARGEUR/2, HAUTEUR/2, LARGEUR/2, HAUTEUR/2+lenght_bras[i-1]+lenght_bras[i], fill="black"))
+# creation of the arms
+for i in range(1, len(lenght_arm)):
+    arm.append(Canevas.create_line(LARGEUR/2, HAUTEUR/2, LARGEUR/2, HAUTEUR/2+lenght_arm[i-1]+lenght_arm[i], fill="black"))
 
-# Création d'un widget Button (bouton Quitter)
-BoutonQuitter = Button(Mafenetre, text = "Quitter", command = Mafenetre.destroy)
+# creation of a Button widget (Quit button)
+BoutonQuitter = Button(root, text = "Quitter", command = root.destroy)
 BoutonQuitter.pack(side = LEFT, padx = 5, pady = 5)
 
-Canevas.bind("<Button-1>", Clic) # évévement clic gauche (press)
-Canevas.bind("<B1-Motion>", Clic) # événement bouton gauche enfoncé (hold down)
+Canevas.bind("<Button-1>", clik) # event left clikk (press)
+Canevas.bind("<B1-Motion>", clik) # event left button down (hold down)
 deplacement()
 
-Mafenetre.mainloop()
+root.mainloop()
